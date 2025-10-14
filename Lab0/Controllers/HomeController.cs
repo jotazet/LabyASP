@@ -51,11 +51,12 @@ public class HomeController : Controller
     }
     public IActionResult Calculator(double? x, double? y, [FromQuery(Name="operator-val")] string op)
     {
+        // Gdy brak parametrów w query (pierwsze wejście na stronę) — pokaż formularz
         if (x is null || y is null)
         {
-            return View("CalculatorError", "Error");
+            return View();
         }
-        
+
         switch (op)
         {
             case "add":
@@ -68,12 +69,13 @@ public class HomeController : Controller
                 ViewBag.Result = $"{x} * {y} = {x * y}";
                 break;
             case "div":
-                ViewBag.Result = $"{x} / {y} = {x / y}";
+                ViewBag.Result = y == 0 ? "Dzielenie przez zero!" : $"{x} / {y} = {x / y}";
                 break;
             default:
                 ViewBag.Result = "Nieznany operator";
                 break;
         }
+
         return View();
     }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,0 +1,28 @@
+@model Lab0.Models.Birth
+
+@{
+    ViewData["Title"] = "Oblicz wiek";
+}
+
+<h2>Oblicz wiek</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color: red;">@ViewBag.Error</div>
+}
+@if (ViewBag.Message != null)
+{
+    <div style="color: green;">@ViewBag.Message</div>
+}
+
+<form asp-action="Index" method="post">
+    <div>
+        <label>Imię:</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Data urodzin:</label>
+        <input asp-for="Date" type="date" />
+    </div>
+    <button type="submit">Oblicz wiek</button>
+</form>
