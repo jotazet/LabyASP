@@ -1,0 +1,15 @@
+@model Contact
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1>Szczegóły kontaktu</h1>
+<h2>Imię</h2>
+<h4>@Model.Name</h4>
+<h2>Email</h2>
+<h4>@Model.Email</h4>
+<h2>Data urodzenia</h2>
+<h4>@Model.BirthDate</h4>
+<a class="btn btn-primary" asp-action="Index">Powrót</a>
