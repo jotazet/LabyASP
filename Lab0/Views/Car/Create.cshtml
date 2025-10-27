@@ -1,0 +1,58 @@
+@model Lab0.Models.Car
+
+@{
+ViewData["Title"] = "Dodaj Samochód";
+}
+
+<h2>Dodaj Nowy Samochód</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Model" class="form-label"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Manufacturer" class="form-label"></label>
+        <input asp-for="Manufacturer" class="form-control" />
+        <span asp-validation-for="Manufacturer" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EngineCapacity" class="form-label"></label>
+        <input asp-for="EngineCapacity" type="number" step="0.1" class="form-control" />
+        <span asp-validation-for="EngineCapacity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Power" class="form-label"></label>
+        <input asp-for="Power" type="number" class="form-control" />
+        <span asp-validation-for="Power" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EngineType" class="form-label"></label>
+        <input asp-for="EngineType" class="form-control" placeholder="np. Benzyna, Diesel, Elektryczny" />
+        <span asp-validation-for="EngineType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="RegistrationNumber" class="form-label"></label>
+        <input asp-for="RegistrationNumber" class="form-control" placeholder="np. KR 12345" />
+        <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Owner" class="form-label"></label>
+        <input asp-for="Owner" class="form-control" />
+        <span asp-validation-for="Owner" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Zapisz</button>
+        <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+    </div>
+</form>

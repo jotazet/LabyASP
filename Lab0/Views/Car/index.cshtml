@@ -1,0 +1,50 @@
+@model List<Lab0.Models.Car>
+
+@{
+    ViewData["Title"] = "Lista Samochodów";
+}
+
+<h2>Lista Samochodów</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj Nowy Samochód</a>
+</p>
+
+@if (Model.Count == 0)
+{
+    <p>Brak samochodów w bazie.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Model</th>
+            <th>Producent</th>
+            <th>Pojemność (l)</th>
+            <th>Moc (KM)</th>
+            <th>Rodzaj silnika</th>
+            <th>Nr rejestracyjny</th>
+            <th>Właściciel</th>
+            <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Model</td>
+                <td>@car.Manufacturer</td>
+                <td>@car.EngineCapacity</td>
+                <td>@car.Power</td>
+                <td>@car.EngineType</td>
+                <td>@car.RegistrationNumber</td>
+                <td>@car.Owner</td>
+                <td>
+                    <a asp-action="Details" asp-route-registrationNumber="@car.RegistrationNumber" class="btn btn-sm btn-info">Szczegóły</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
