@@ -1,9 +1,40 @@
+using Lab0.Models;
+using Lab0.Services;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Konfiguracja kultury - używamy kultury niezmiennej (InvariantCulture) która używa kropki jako separatora dziesiętnego
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { CultureInfo.InvariantCulture };
+    options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Konfiguracja Entity Framework z SQLite
+builder.Services.AddDbContext<AddDbContext>(options =>
+    options.UseSqlite("Data Source=cars.db"));
+
+// Używamy EF implementacji zamiast pamięci
+builder.Services.AddTransient<ICarService, EfCarService>();
+builder.Services.AddTransient<ICompanyService, EfCompanyService>();
 var app = builder.Build();
+
+// Automatyczne odtworzenie bazy danych przy starcie
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AddDbContext>();
+    // Usuń starą bazę i utwórz nową z wszystkimi tabelami
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -14,6 +45,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Używaj konfiguracji lokalizacji
+app.UseRequestLocalization();
+
 app.UseRouting();
 
 app.UseAuthorization();

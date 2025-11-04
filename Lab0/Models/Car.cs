@@ -4,6 +4,8 @@ namespace Lab0.Models;
 
 public class Car
 {
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "Model jest wymagany")]
     [StringLength(100, ErrorMessage = "Model nie może przekraczać 100 znaków")]
     public string Model { get; set; } = string.Empty;
@@ -36,4 +38,11 @@ public class Car
     [StringLength(200, ErrorMessage = "Właściciel nie może przekraczać 200 znaków")]
     [Display(Name = "Właściciel")]
     public string Owner { get; set; } = string.Empty;
+
+    // Opcjonalna relacja z firmą
+    [Display(Name = "Firma")]
+    public int? CompanyId { get; set; }
+
+    // Navigation property
+    public virtual Company? Company { get; set; }
 }
