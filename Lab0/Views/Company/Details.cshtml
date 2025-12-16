@@ -1,0 +1,36 @@
+@model Lab0.Models.Company
+
+@{
+    ViewData["Title"] = "Szczegóły firmy";
+}
+
+<h2>@Model.Name</h2>
+
+<table class="table">
+    <tr><th>Adres</th><td>@Model.Address</td></tr>
+    <tr><th>Telefon</th><td>@Model.Phone</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr>
+        <th>Samochody</th>
+        <td>
+            @if (Model.Cars?.Any() == true)
+            {
+                <ul>
+                    @foreach (var car in Model.Cars)
+                    {
+                        <li>@car.Manufacturer @car.Model (@car.RegistrationNumber)</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span>Brak przypisanych samochodów.</span>
+            }
+        </td>
+    </tr>
+</table>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edytuj</a>
+    <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+</div>

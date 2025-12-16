@@ -1,0 +1,36 @@
+@model List<Contact>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Kontakty</h2>
+<a class="btn btn-outline-primary" asp-controller="Contact" asp-action="Create">Dodaj kontakt</a>
+<ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Email</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@contact.Name</td>
+                    <td>@contact.Email</td>
+                    <td>
+                        <a class="btn btn-primary">Edytuj</a>
+                        <a class="btn btn-success" asp-action="Details" asp-route-id="@contact.Id">Szczegóły</a>
+                        <a class="btn btn-danger">Usuń</a>
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</ul>

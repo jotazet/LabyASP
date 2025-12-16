@@ -1,0 +1,40 @@
+@{
+    ViewBag.Title = "calculator";
+    Layout = "_Layout";
+}
+
+<h2>Kalkulator</h2>
+
+@if (ViewBag.Result != null)
+{
+    <div class="alert alert-info">
+        <h3>@ViewBag.Result</h3>
+    </div>
+}
+
+<form method="post" action="/Calculator/Result">
+    <div class="mb-3">
+        <label class="form-label" for="x">Liczba 1</label>
+        <input class="form-control" type="number" id="x" name="x" step="0.1" required>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label" for="operator">Operator</label>
+        <select class="form-select" name="Operator" id="operator" required>
+            <option value="">Wybierz operator</option>
+            <option value="0">Dodawanie (+)</option>
+            <option value="1">Odejmowanie (-)</option>
+            <option value="2">Mnożenie (×)</option>
+            <option value="3">Dzielenie (÷)</option>
+        </select>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label" for="y">Liczba 2</label>
+        <input class="form-control" type="number" id="y" name="y" step="0.1" required>
+    </div>
+    
+    <div class="mb-3">
+        <button class="btn btn-primary" type="submit">Oblicz</button>
+    </div>
+</form>

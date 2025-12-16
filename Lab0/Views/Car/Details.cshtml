@@ -1,0 +1,26 @@
+@model Lab0.Models.Car
+
+@{
+    ViewData["Title"] = "Szczegóły Samochodu";
+}
+
+<h2>Szczegóły Samochodu</h2>
+
+<div class="mb-3">
+    <a asp-action="Edit" asp-route-registrationNumber="@Model.RegistrationNumber" class="btn btn-warning">Edytuj</a>
+    <form asp-action="Delete" asp-route-registrationNumber="@Model.RegistrationNumber" method="post" class="d-inline">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Usunąć ten samochód?');">Usuń</button>
+    </form>
+    <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+</div>
+
+<table class="table">
+    <tr><th>Model</th><td>@Model.Model</td></tr>
+    <tr><th>Producent</th><td>@Model.Manufacturer</td></tr>
+    <tr><th>Pojemność (l)</th><td>@Model.EngineCapacity</td></tr>
+    <tr><th>Moc (KM)</th><td>@Model.Power</td></tr>
+    <tr><th>Rodzaj silnika</th><td>@Model.EngineType</td></tr>
+    <tr><th>Nr rejestracyjny</th><td>@Model.RegistrationNumber</td></tr>
+    <tr><th>Właściciel</th><td>@Model.Owner</td></tr>
+    <tr><th>Firma</th><td>@(Model.Company?.Name ?? "—")</td></tr>
+</table>
