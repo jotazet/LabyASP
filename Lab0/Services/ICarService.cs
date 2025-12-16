@@ -11,4 +11,5 @@ public interface ICarService
     Task UpdateAsync(Car car);
     Task DeleteAsync(int id);
     Task DeleteByRegistrationAsync(string registrationNumber);
+    Task<bool> RegistrationExistsAsync(string registrationNumber, int? exceptId = null);
 }

@@ -2,9 +2,11 @@ using Lab0.Models;
 using Microsoft.AspNetCore.Mvc;
 using Lab0.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab0.Controllers;
 
+[Authorize]
 public class CarController : Controller
 {
     private readonly ICarService _cars;
@@ -22,9 +24,11 @@ public class CarController : Controller
         ViewBag.Companies = new SelectList(list, nameof(Company.Id), nameof(Company.Name), selectedId);
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var cars = await _cars.GetAllAsync();
+        ViewData[LastVisitCookie.CookieName] = Response.HttpContext.Items[LastVisitCookie.CookieName];
         return View(cars.ToList());
     }
 
@@ -47,6 +51,7 @@ public class CarController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Details(string registrationNumber)
     {
         var car = await _cars.GetByRegistrationAsync(registrationNumber);

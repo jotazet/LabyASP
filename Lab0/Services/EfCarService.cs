@@ -67,4 +67,11 @@ public class EfCarService : ICarService
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<bool> RegistrationExistsAsync(string registrationNumber, int? exceptId = null)
+    {
+        return await _context.Cars
+            .AsNoTracking()
+            .AnyAsync(c => c.RegistrationNumber == registrationNumber && (!exceptId.HasValue || c.Id != exceptId.Value));
+    }
 }

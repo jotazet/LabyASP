@@ -16,7 +16,12 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 });
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
 
 // Konfiguracja Entity Framework z SQLite
 builder.Services.AddDbContext<AddDbContext>(options =>
@@ -25,13 +30,22 @@ builder.Services.AddDbContext<AddDbContext>(options =>
 // Używamy EF implementacji zamiast pamięci
 builder.Services.AddTransient<ICarService, EfCarService>();
 builder.Services.AddTransient<ICompanyService, EfCompanyService>();
+builder.Services.AddRazorPages();
+builder.Services.AddDefaultIdentity<Microsoft.AspNetCore.Identity.IdentityUser>()
+    .AddRoles<Microsoft.AspNetCore.Identity.IdentityRole>()
+    .AddEntityFrameworkStores<AddDbContext>();
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
 var app = builder.Build();
 
 // Automatyczne odtworzenie bazy danych przy starcie
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AddDbContext>();
-    // Utwórz bazę, jeśli nie istnieje
+#if DEBUG
+    // Recreate DB in development to ensure Identity tables exist
+    context.Database.EnsureDeleted();
+#endif
     context.Database.EnsureCreated();
 }
 
@@ -50,7 +64,13 @@ app.UseRequestLocalization();
 
 app.UseRouting();
 
+app.UseMiddleware<LastVisitCookie>();
+
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
+
+app.MapRazorPages();
 
 app.MapStaticAssets();
 
