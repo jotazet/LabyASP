@@ -1,41 +1,99 @@
 using Lab0.Models;
 using Microsoft.AspNetCore.Mvc;
+using Lab0.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Lab0.Controllers;
 
 public class CarController : Controller
 {
-    private static readonly List<Car> Cars = new();
+    private readonly ICarService _cars;
+    private readonly ICompanyService _companies;
 
-    public IActionResult Index()
+    public CarController(ICarService cars, ICompanyService companies)
     {
-        return View(Cars);
+        _cars = cars;
+        _companies = companies;
     }
 
-    public IActionResult Create()
+    private async Task PopulateCompaniesAsync(int? selectedId = null)
     {
+        var list = await _companies.GetAllAsync();
+        ViewBag.Companies = new SelectList(list, nameof(Company.Id), nameof(Company.Name), selectedId);
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var cars = await _cars.GetAllAsync();
+        return View(cars.ToList());
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        await PopulateCompaniesAsync();
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Car car)
+    public async Task<IActionResult> Create(Car car)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            Cars.Add(car);
-            return RedirectToAction(nameof(Index));
+            await PopulateCompaniesAsync(car.CompanyId);
+            return View(car);
         }
-        return View(car);
+        await _cars.AddAsync(car);
+        return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Details(string registrationNumber)
+    public async Task<IActionResult> Details(string registrationNumber)
     {
-        var car = Cars.FirstOrDefault(c => c.RegistrationNumber == registrationNumber);
+        var car = await _cars.GetByRegistrationAsync(registrationNumber);
         if (car == null)
         {
             return NotFound();
         }
         return View(car);
+    }
+
+    public async Task<IActionResult> Edit(string registrationNumber)
+    {
+        var car = await _cars.GetByRegistrationAsync(registrationNumber);
+        if (car == null)
+        {
+            return NotFound();
+        }
+        await PopulateCompaniesAsync(car.CompanyId);
+        return View(car);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(string registrationNumber, Car updated)
+    {
+        if (!ModelState.IsValid)
+        {
+            await PopulateCompaniesAsync(updated.CompanyId);
+            return View(updated);
+        }
+        var existing = await _cars.GetByRegistrationAsync(registrationNumber);
+        if (existing == null)
+        {
+            return NotFound();
+        }
+        // Preserve identity and key values
+        updated.Id = existing.Id;
+        updated.RegistrationNumber = existing.RegistrationNumber;
+        await _cars.UpdateAsync(updated);
+        return RedirectToAction(nameof(Details), new { registrationNumber });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(string registrationNumber)
+    {
+        await _cars.DeleteByRegistrationAsync(registrationNumber);
+        return RedirectToAction(nameof(Index));
     }
 }

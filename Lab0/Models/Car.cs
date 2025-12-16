@@ -42,7 +42,6 @@ public class Car
     // Opcjonalna relacja z firmą
     [Display(Name = "Firma")]
     public int? CompanyId { get; set; }
-
-    // Navigation property
+    
     public virtual Company? Company { get; set; }
 }

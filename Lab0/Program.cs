@@ -31,8 +31,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AddDbContext>();
-    // Usuń starą bazę i utwórz nową z wszystkimi tabelami
-    context.Database.EnsureDeleted();
+    // Utwórz bazę, jeśli nie istnieje
     context.Database.EnsureCreated();
 }
 
@@ -60,5 +59,10 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapControllerRoute(
+    name: "cars",
+    pattern: "Cars/{action=Index}/{id?}",
+    defaults: new { controller = "Car" }
+);
 
 app.Run();

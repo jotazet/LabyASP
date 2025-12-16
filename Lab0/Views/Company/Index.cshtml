@@ -1,0 +1,42 @@
+@model IEnumerable<Lab0.Models.Company>
+
+@{
+    ViewData["Title"] = "Firmy";
+}
+
+<h2>Firmy</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj firmę</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Nazwa</th>
+        <th>Adres</th>
+        <th>Telefon</th>
+        <th>Email</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var company in Model)
+    {
+        <tr>
+            <td>@company.Name</td>
+            <td>@company.Address</td>
+            <td>@company.Phone</td>
+            <td>@company.Email</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@company.Id" class="btn btn-sm btn-info">Szczegóły</a>
+                <a asp-action="Edit" asp-route-id="@company.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                <form asp-action="Delete" asp-route-id="@company.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Usunąć firmę?');">Usuń</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
